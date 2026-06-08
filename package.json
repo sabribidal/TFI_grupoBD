@@ -2,7 +2,7 @@
   "name": "tpig",
   "version": "1.0.0",
   "description": "Trabajo Práctico Integrador - Programación III - UNER",
-  "type":"module",
+  "type": "module",
   "main": "Turnos.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -15,6 +15,10 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "express-validator": "^7.3.2",
-    "mysql2": "^3.22.3"
+    "mysql2": "^3.22.3",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "swagger-autogen": "^2.23.7"
   }
 }
