@@ -1,29 +1,28 @@
-import { check, param } from 'express-validator';
-import { validarCampos } from '../middlewares/validarCampos.js';
-//const EspecialidadesService = require('../services/especialidades.service');
 
-import EspecialidadesService from '../services/especialidades.service.js';
+import ObrasSocialesService from '../services/obras_sociales.service.js';
 
-export default class EspecialidadesController {
+
+export default class ObrasSocialesController {
 
     constructor() {
-        this.service = new EspecialidadesService();
+        this.service = new ObrasSocialesService();
     }
+
 
     // BUSCAR TODAS — GET
     buscarTodas = async (req, res) => {
         try {
-            const especialidades = await this.service.buscarTodas();
+            const obrasSociales = await this.service.buscarTodas();
             return res.status(200).json({
                 estado: true,
-                mensaje: 'Especialidades obtenidas correctamente.',
-                datos: especialidades,
+                mensaje: 'Obras sociales obtenidas correctamente.',
+                datos: obrasSociales,
             });
         } catch (error) {
-            console.error('[EspecialidadesController.buscarTodas]', error.message);
+            console.error('[ObrasSocialesController.buscarTodas]', error.message);
             return res.status(500).json({
                 estado: false,
-                mensaje: 'Error al obtener las especialidades.',
+                mensaje: 'Error al obtener las obras sociales.',
                 datos: null,
             });
         }
@@ -34,74 +33,74 @@ export default class EspecialidadesController {
     buscarPorId = async (req, res) => {
         try {
             const id = parseInt(req.params.id);
-            const especialidad = await this.service.buscarPorId(id);
+            const obraSocial = await this.service.buscarPorId(id);
 
-            if (!especialidad) {
+            if (!obraSocial) {
                 return res.status(404).json({
                     estado: false,
-                    mensaje: `No se encontró la especialidad con la ID ${id}.`,
+                    mensaje: `No se encontró la obra social con el ID ${id}.`,
                     datos: null,
                 });
             }
 
             return res.status(200).json({
                 estado: true,
-                mensaje: 'Especialidad obtenida correctamente.',
-                datos: especialidad,
+                mensaje: 'Obra social obtenida correctamente.',
+                datos: obraSocial,
             });
         } catch (error) {
-            console.error('[EspecialidadesController.buscarPorId]', error.message);
+            console.error('[ObrasSocialesController.buscarPorId]', error.message);
             return res.status(500).json({
                 estado: false,
-                mensaje: 'Error al obtener la especialidad.',
+                mensaje: 'Error al obtener la obra social.',
                 datos: null,
             });
         }
     }
 
 
-    // CREAR — POST
+    // AÑADIR — POST
     crear = async (req, res) => {
         try {
-            const { nombre } = req.body;
-            const nueva = await this.service.crear({ nombre });
+            const { nombre, descripcion, porcentaje_descuento, es_particular } = req.body;
+            const nueva = await this.service.crear({ nombre, descripcion, porcentaje_descuento, es_particular });
             return res.status(201).json({
                 estado: true,
-                mensaje: 'Especialidad creada correctamente.',
+                mensaje: 'Obra social creada correctamente.',
                 datos: nueva,
             });
         } catch (error) {
-            console.error('[EspecialidadesController.crear]', error.message);
+            console.error('[ObrasSocialesController.crear]', error.message);
             if (error.code === 'ER_DUP_ENTRY') {
                 return res.status(409).json({
                     estado: false,
-                    mensaje: 'Ya existe una especialidad con ese nombre.',
+                    mensaje: 'Ya existe una obra social con ese nombre.',
                     datos: null,
                 });
             }
             return res.status(500).json({
                 estado: false,
-                mensaje: 'Error al crear la especialidad.',
+                mensaje: 'Error al crear la obra social.',
                 datos: null,
             });
         }
     }
 
 
-    // ACTUALIZAR — PUT
-    // El servicio verifica si existe, si no da error
+    // EDITAR — PUT
+    // El servicio verifica si existe, si no error
     actualizar = async (req, res) => {
         try {
             const id = parseInt(req.params.id);
-            const { nombre } = req.body;
-            const actualizada = await this.service.actualizar(id, { nombre });
+            const { nombre, descripcion, porcentaje_descuento, es_particular } = req.body;
+            const actualizada = await this.service.actualizar(id, { nombre, descripcion, porcentaje_descuento, es_particular });
             return res.status(200).json({
                 estado: true,
-                mensaje: 'Especialidad actualizada correctamente.',
+                mensaje: 'Obra social actualizada correctamente.',
                 datos: actualizada,
             });
         } catch (error) {
-            console.error('[EspecialidadesController.actualizar]', error.message);
+            console.error('[ObrasSocialesController.actualizar]', error.message);
             if (error.status === 404) {
                 return res.status(404).json({
                     estado: false,
@@ -112,32 +111,31 @@ export default class EspecialidadesController {
             if (error.code === 'ER_DUP_ENTRY') {
                 return res.status(409).json({
                     estado: false,
-                    mensaje: 'Ya existe una especialidad con ese nombre.',
+                    mensaje: 'Ya existe una obra social con ese nombre.',
                     datos: null,
                 });
             }
             return res.status(500).json({
                 estado: false,
-                mensaje: 'Error al actualizar la especialidad.',
+                mensaje: 'Error al actualizar la obra social.',
                 datos: null,
             });
         }
     }
 
-    
+
     // BORRAR — DELETE
-    // Igual que en actualizar, el servicio verifica que exista, si no da error
     eliminar = async (req, res) => {
         try {
             const id = parseInt(req.params.id);
             await this.service.eliminar(id);
             return res.status(200).json({
                 estado: true,
-                mensaje: `Especialidad con ID ${id} eliminada correctamente.`,
+                mensaje: `Obra social con ID ${id} eliminada correctamente.`,
                 datos: null,
             });
         } catch (error) {
-            console.error('[EspecialidadesController.eliminar]', error.message);
+            console.error('[ObrasSocialesController.eliminar]', error.message);
             if (error.status === 404) {
                 return res.status(404).json({
                     estado: false,
@@ -147,7 +145,7 @@ export default class EspecialidadesController {
             }
             return res.status(500).json({
                 estado: false,
-                mensaje: 'Error interno al eliminar la especialidad.',
+                mensaje: 'Error al eliminar la obra social.',
                 datos: null,
             });
         }
