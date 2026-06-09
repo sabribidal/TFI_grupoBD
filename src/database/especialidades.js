@@ -1,59 +1,36 @@
 import { pool } from './conexion.js';
 
+
 export default class Especialidades {
 
     buscarTodas = async () => {
-        try {
-            const consulta = 'SELECT * FROM especialidades WHERE activo=1';
-            const [especialidades] = await pool.query(consulta);
-            return especialidades;
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
+        const sql = 'SELECT * FROM especialidades WHERE activo = 1';
+        const [rows] = await pool.query(sql);
+        return rows;
     }
 
-    buscarPorId = async (id_especialidad) => {
-        try {
-            const consulta = 'SELECT * FROM especialidades WHERE activo=1 AND id_especialidad=?';
-            const [rows] = await pool.query(consulta, [id_especialidad]);
-            return rows.length > 0 ? rows[0] : null;
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
+    buscarPorId = async (id) => {
+        const sql = 'SELECT * FROM especialidades WHERE id_especialidad = ? AND activo = 1';
+        const [rows] = await pool.execute(sql, [id]);
+        return rows[0] ?? null;
     }
 
     crear = async (especialidad) => {
-        try {
-            const consulta = 'INSERT INTO especialidades (nombre) VALUES (?)';
-            const [result] = await pool.execute(consulta, [especialidad.nombre]);
-            return { id_especialidad: result.insertId, nombre: especialidad.nombre };
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
+        const sql = 'INSERT INTO especialidades (nombre) VALUES (?)';
+        const [result] = await pool.execute(sql, [especialidad.nombre]);
+        
+        return await this.buscarPorId(result.insertId);
     }
 
-    actualizar = async (id_especialidad, especialidad) => {
-        try {
-            const consulta = 'UPDATE especialidades SET nombre=? WHERE id_especialidad=?';
-            const [result] = await pool.execute(consulta, [especialidad.nombre, id_especialidad]);
-            return { id_especialidad, nombre: especialidad.nombre, affectedRows: result.affectedRows };
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
+    actualizar = async (id, especialidad) => {
+        const sql = 'UPDATE especialidades SET nombre = ? WHERE id_especialidad = ? AND activo = 1';
+        await pool.execute(sql, [especialidad.nombre, id]);
+        return await this.buscarPorId(id);
     }
 
-    eliminar = async (id_especialidad) => {
-        try {
-            const consultaEliminar = 'UPDATE especialidades SET activo=0 WHERE id_especialidad=?';
-            const [result] = await pool.execute(consultaEliminar, [id_especialidad]);
-            return result.affectedRows > 0;
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
+    // Se marca como inactivo, no se borra
+    eliminar = async (id) => {
+        const sql = 'UPDATE especialidades SET activo = 0 WHERE id_especialidad = ?';
+        await pool.execute(sql, [id]);
     }
 }
