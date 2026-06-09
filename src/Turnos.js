@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import { pool } from './database/conexion.js';
 import { testConexion } from './database/test_conexion.js';
 import { router as v1EspecialidadesRutas } from './routes/v1/especialidadesRutas.js';
+import { router as v1ObrasSocialesRutas } from './routes/v1/obrasSocialesRutas.js';
 import { createRequire } from 'module';
 import swaggerUI from 'swagger-ui-express';
 
@@ -25,6 +26,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/v1/especialidades', v1EspecialidadesRutas);
+app.use('/api/v1/obras-sociales', v1ObrasSocialesRutas);
 app.use('/api/v1/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 process.loadEnvFile();
 const PUERTO = process.env.PUERTO;
