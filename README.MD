@@ -5,7 +5,7 @@ UNER Concordia - Facultad de Ciencias de la Administración
 Año Lectivo: 2026
 
 Integrantes:
-Emili Lange
+Emily Lange
 Sabrina Bidal
 Santiago Ramírez
 Axel Barzola
