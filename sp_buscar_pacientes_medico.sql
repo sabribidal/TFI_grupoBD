@@ -1,5 +1,4 @@
 DELIMITER $$
-
 CREATE PROCEDURE sp_buscar_pacientes_medico(
     IN p_id_medico INT,
     IN p_fecha DATE
@@ -25,5 +24,4 @@ BEGIN
       AND tr.activo = 1
     ORDER BY tr.fecha_hora ASC;
 END $$
-
 DELIMITER ;
