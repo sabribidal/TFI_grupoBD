@@ -21,6 +21,7 @@
     "mysql2": "^3.22.3",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
+    "pdfkit": "^0.19.1",
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
