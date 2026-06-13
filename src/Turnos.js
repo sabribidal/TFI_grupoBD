@@ -10,6 +10,11 @@ import { router as v1ObrasSocialesRutas } from './routes/v1/obrasSocialesRutas.j
 import { createRequire } from 'module';
 import swaggerUI from 'swagger-ui-express';
 
+import authRouter from "./routes/AuthRouter.js";
+import passport from "./middlewares/passport.js";
+import morgan from "morgan";
+import path from "path";
+
 const require = createRequire(import.meta.url);
 const swaggerDocument = require('../swagger_output.json');
 
@@ -25,9 +30,13 @@ app.get('/', (req, res) => {
     res.send({'status': 'ok', 'message': 'Servidor funcionando correctamente'});
 });
 
+app.use(morgan("dev"));
 app.use('/api/v1/especialidades', v1EspecialidadesRutas);
 app.use('/api/v1/obras-sociales', v1ObrasSocialesRutas);
 app.use('/api/v1/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+app.use("/auth", authRouter);
+app.use("/uploads", express.static("uploads"));
+app.use(passport.initialize());
 process.loadEnvFile();
 const PUERTO = process.env.PUERTO;
 
