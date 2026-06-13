@@ -7,6 +7,7 @@ import { pool } from './database/conexion.js';
 import { testConexion } from './database/test_conexion.js';
 import { router as v1EspecialidadesRutas } from './routes/v1/especialidadesRutas.js';
 import { router as v1ObrasSocialesRutas } from './routes/v1/obrasSocialesRutas.js';
+import { router as v1PdfRutas } from './routes/v1/pdfRutas.js';
 import { createRequire } from 'module';
 import swaggerUI from 'swagger-ui-express';
 
@@ -19,6 +20,7 @@ const require = createRequire(import.meta.url);
 const swaggerDocument = require('../swagger_output.json');
 
 dotenv.config();
+process.loadEnvFile();
 
 const app = express();
 
@@ -36,6 +38,7 @@ app.use('/api/v1/obras-sociales', v1ObrasSocialesRutas);
 app.use('/api/v1/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 app.use("/auth", authRouter);
 app.use("/uploads", express.static("uploads"));
+app.use('/api/v1/pdf', v1PdfRutas);
 app.use(passport.initialize());
 process.loadEnvFile();
 const PUERTO = process.env.PUERTO;

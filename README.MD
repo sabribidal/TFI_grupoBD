@@ -21,6 +21,7 @@ Daniel Miños
 + **Morgan** - 
 + **Multer** - 
 + **Swagger** - 
++ **PDFkit** -
 
 ## 🛠️ Requisitos previos
 Antes de comenzar, asegúrate de tener instalado:
@@ -57,11 +58,14 @@ JWT_SECRET=tu_clave_secreta_para_tokens
 
 El servidor debería estar corriendo en: http://localhost:3000
 
-🛣️ Endpoints Principales (Rutas)Aquí tienes una guía rápida de las rutas disponibles en la API
 
-Método              EndPoint            Descripción             Middleware
+🛣️ Endpoint Ejemplo para obtener ayuda de swagger
 
+http://localhost:3000/api/v1/api-docs
 
+🛣️ Endpoint Ejemplo para obtener reporte de atención de médico por fecha
+
+localhost:3000/api/v1/pdf/reporte/3/2026-04-01 - > donde 3 es el id_medico y /2026-04-01 fecha a buscar
 
 📂 Estructura del Proyecto
 El proyecto sigue una arquitectura limpia basada en capas:
