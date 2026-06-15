@@ -81,8 +81,16 @@ export default class Medicos {
     }
 
     eliminar = async (id) => {
-        const sql = 'DELETE FROM medicos WHERE id_medico = ?';
-        await pool.execute(sql, [id]);
+
+        const medico = await this.buscarPorId(id);
+
+        const sql = `
+            UPDATE usuarios
+            SET activo = 0
+            WHERE id_usuario = ?
+        `;
+
+        await pool.execute(sql, [medico.id_usuario]);
     }
 
 }
