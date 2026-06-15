@@ -1,12 +1,14 @@
 import TurnosReservado from "../database/TurnosReservado.js";
 import ObrasSocialesService from "./obras_sociales.service.js";
+import MedicosService from "./medicos.service.js";
+import PacientesService from "./pacientes.service.js";
 
 export default class TurnosReservadoService{
     constructor(){
         this.turnoReserva = new TurnosReservado();
         this.obraSociales = new ObrasSocialesService();
-        this.medicos = 0; //Falta archivo de servicios de medicos 
-        this.pacientes = 0; //Falta archivo de servicios de pacientes
+        this.medicos = new MedicosService(); 
+        this.pacientes = new PacientesService(); 
     }
 
     buscarTodas = async (usuario) => {
@@ -18,11 +20,11 @@ export default class TurnosReservadoService{
     }
 
     crear = async (TurnosReserva) =>{
-        const medico = 0 // Falta archivo conexion a BD de medicos 
-        const paciente = 0  //Falta archivo conexion a BD de pacientes
+        const medico = await this.medicos.buscarPorId(TurnosReserva.id_medico);
+        const paciente = await this.pacientes.buscarPorId(TurnosReserva.id_paciente);
         const obra_social = await this.obraSociales.buscarPorId(paciente.id_obra_social);
         
-        let valor = 0; // Valor de la consulta del medico
+        let valor = this.medico.valor_consulta;
 
         if (obra_social.es_particular === 0){
             valor = valor - (obra_social.porcentaje_descuento * valor)
