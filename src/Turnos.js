@@ -7,7 +7,16 @@ import { pool } from './database/conexion.js';
 import { testConexion } from './database/test_conexion.js';
 import { router as v1EspecialidadesRutas } from './routes/v1/especialidadesRutas.js';
 import { router as v1ObrasSocialesRutas } from './routes/v1/obrasSocialesRutas.js';
+<<<<<<< HEAD
+<<<<<<< HEAD
 import { router as v1PdfRutas } from './routes/v1/pdfRutas.js';
+=======
+import { router as v1MedicosRutas } from './routes/v1/medicosRutas.js';
+=======
+import { router as v1medicosRutas } from './routes/medicosRutas.js'; 
+>>>>>>> 72ab6d3 (cambios en turno)
+import v1PacientesRutas from './routes/v1/pacientesRutas.js'; 
+>>>>>>> 26f912e (Alta de pacientes y delete logico)
 import { createRequire } from 'module';
 import swaggerUI from 'swagger-ui-express';
 
@@ -35,6 +44,8 @@ app.get('/', (req, res) => {
 app.use(morgan("dev"));
 app.use('/api/v1/especialidades', v1EspecialidadesRutas);
 app.use('/api/v1/obras-sociales', v1ObrasSocialesRutas);
+app.use('/api/v1/medicos', v1MedicosRutas);
+ app.use('/api/v1/pacientes', v1PacientesRutas); 
 app.use('/api/v1/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 app.use("/auth", authRouter);
 app.use("/uploads", express.static("uploads"));
