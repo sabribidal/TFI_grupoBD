@@ -18,4 +18,8 @@ export default class PDFService {
         return await this.pdf.buscarPacientesMedico(idMedico, fecha);
     }
 
+    obtenerPacientesAtendidosPorMes = async (anio, mes) => {
+    return await this.pdf.obtenerPacientesAtendidosPorMes(anio, mes);
+    }
+
 }

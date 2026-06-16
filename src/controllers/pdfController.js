@@ -2,7 +2,7 @@ import { check, param } from 'express-validator';
 import { validarCampos } from '../middlewares/validarCampos.js';
 
 import PDFService from '../services/pdfService.js';
-import { crearPDFReporte } from '../utils/pdfGenerador.js';
+import { crearPDFReporte, crearPDFReporteMensual } from '../utils/pdfGenerador.js';
 
 class PDFController {
     constructor() {
@@ -88,6 +88,41 @@ class PDFController {
             res.status(500).json({ error: 'Error al generar el PDF' });
         }
     }
+
+    generarReporteMensual = async (req, res) => {
+    try {
+        const { anio, mes } = req.params;
+
+        const datos = await this.pdfService.obtenerPacientesAtendidosPorMes(anio, mes);
+
+        if (!datos || datos.length === 0) {
+            return res.status(404).json({ error: 'No se encontraron datos para el período indicado' });
+        }
+
+        // Armar objeto para el generador
+        const datosReporte = {
+            anio,
+            mes,
+            medicos: datos.map(d => ({
+                id_medico: d.id_medico,
+                apellido: d.apellido,
+                nombres: d.nombres,
+                email: d.email,
+                total_atendidos: d.total_atendidos
+            }))
+        };
+
+        const pdfBuffer = await crearPDFReporteMensual(datosReporte);
+
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'inline; filename=reporte_mensual.pdf');
+        res.send(pdfBuffer);
+
+    } catch (error) {
+        console.error('Error al generar reporte mensual:', error);
+        res.status(500).json({ error: 'Error al generar el reporte mensual' });
+    }
+}
 }
 
 export default PDFController;
