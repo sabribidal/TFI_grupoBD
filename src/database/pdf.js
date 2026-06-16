@@ -21,4 +21,12 @@ export default class PDF {
         // MySQL devuelve un array de resultados para cada conjunto de resultados
         return pacientes[0] || [];
     }
+
+    obtenerPacientesAtendidosPorMes = async (anio, mes) => {
+    const [rows] = await pool.query(
+        'CALL sp_pacientes_atendidos_por_mes(?, ?)',
+        [anio, mes]
+    );
+    return rows[0]; // MySQL devuelve el resultado del SP en rows[0]
+    }
 }

@@ -1,0 +1,30 @@
+DELIMITER $$
+
+CREATE PROCEDURE sp_pacientes_atendidos_por_mes(
+    IN p_anio INT,
+    IN p_mes  INT
+)
+BEGIN
+    SELECT
+        m.id_medico,
+        m.apellido,
+        m.nombres,
+        m.email,
+        COUNT(t.id_turno_reserva) AS total_atendidos
+    FROM v_medicos m
+    LEFT JOIN turnos_reservas t
+        ON t.id_medico  = m.id_medico
+        AND t.atendido  = 1
+        AND t.activo    = 1
+        AND YEAR(t.fecha_hora)  = p_anio
+        AND MONTH(t.fecha_hora) = p_mes
+    GROUP BY
+        m.id_medico,
+        m.apellido,
+        m.nombres,
+        m.email
+    ORDER BY
+        total_atendidos DESC;
+END $$
+
+DELIMITER ;
