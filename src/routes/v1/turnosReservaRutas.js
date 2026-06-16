@@ -3,11 +3,12 @@ import { validarTurnoReserva } from '../../validations/turnosReservado.validatio
 import {validarCampos} from '../../middlewares/validarCampos.js';
 
 import TurnosReservadoController from '../../controllers/TurnosReservado.controller.js';
+import { autorizar } from '../../middlewares/autorizar.js';
 
 const router = express.Router();
 const turnosReservadoController = new TurnosReservadoController();
 
-router.get('/', turnosReservadoController.buscarTodos);router.get('/por-especialidad', turnosReservadoController.porEspecialidad);
+router.get('/', autorizar([1,2]) ,turnosReservadoController.buscarTodos);
 router.post('/', validarTurnoReserva, validarCampos, turnosReservadoController.crear);
 
 export {router}
