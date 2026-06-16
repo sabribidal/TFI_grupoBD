@@ -44,12 +44,6 @@ export default class TurnosReservado{
         const [turnos] = await pool.execute(sql, [id_usuario]);
         return turnos;
     } 
-
-    porEspecialidad = async()=>{
-        const sql='CALL sp_turnos_por_especialidad()';
-        const [datos]=await pool.execute(sql);
-        return datos[0];
-    }
 }
 
 
