@@ -84,3 +84,7 @@ El proyecto sigue una arquitectura limpia basada en capas:
 ├── swagger_output.json  # EndPoint registrados por swagger
 ├── package-lock.json    # Registro de versiones exactas, ubicación y dependencias anidadas
 └── package.json         # Dependencias y scripts
+
+
+
+
