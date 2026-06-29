@@ -18,19 +18,19 @@ router.get('/:id',
 
 router.post('/',
     auth,
-    autorizar(1),
+    autorizar(3),
     controller.crear
 );
 
 router.put('/:id',
     auth,
-    autorizar(1),
+    autorizar(3),
     controller.actualizar
 );
 
 router.delete('/:id',
     auth,
-    autorizar(1),
+    autorizar(3),
     controller.eliminar
 );
 
