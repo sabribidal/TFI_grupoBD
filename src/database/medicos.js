@@ -14,6 +14,17 @@ export default class Medicos {
         return rows[0] ?? null;
     }
 
+    buscarPorEspecialidad = async (id_especialidad) => {
+        const sql = `
+            SELECT vm.*
+            FROM v_medicos vm
+            JOIN medicos m ON vm.id_medico = m.id_medico
+            WHERE m.id_especialidad = ?
+        `;
+        const [rows] = await pool.execute(sql, [id_especialidad]);
+        return rows;
+    }
+
     crear = async (medico) => {
 
         const {

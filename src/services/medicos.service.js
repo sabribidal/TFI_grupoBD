@@ -14,6 +14,10 @@ export default class MedicosService {
         return await this.medicos.buscarPorId(id);
     }
 
+    buscarPorEspecialidad = async (id_especialidad) => {
+        return await this.medicos.buscarPorEspecialidad(id_especialidad);
+    }
+
     crear = async (datos) => {
         return await this.medicos.crear(datos);
     }
