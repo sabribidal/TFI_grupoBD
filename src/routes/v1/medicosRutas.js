@@ -9,6 +9,7 @@ const auth = passport.authenticate('jwt', { session: false });
 
 
 router.get('/', auth, autorizar('2, 3'), controller.buscarTodas);
+router.get('/especialidad/:id_especialidad', auth, autorizar('2, 3'), controller.buscarPorEspecialidad);
 router.get('/:id', auth, autorizar('2, 3'), controller.buscarPorId);
 
 

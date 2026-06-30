@@ -63,6 +63,32 @@ export default class MedicosController {
         }
     }
 
+    buscarPorEspecialidad = async (req, res) => {
+
+        try {
+
+            const id_especialidad = parseInt(req.params.id_especialidad);
+
+            const medicos = await this.service.buscarPorEspecialidad(id_especialidad);
+
+            return res.status(200).json({
+                estado: true,
+                mensaje: 'Médicos de la especialidad obtenidos correctamente.',
+                datos: medicos,
+            });
+
+        } catch (error) {
+
+            console.error('[MedicosController.buscarPorEspecialidad]', error.message);
+
+            return res.status(500).json({
+                estado: false,
+                mensaje: 'Error al obtener los médicos de la especialidad.',
+                datos: null,
+            });
+        }
+    }
+
     crear = async (req, res) => {
 
         try {
