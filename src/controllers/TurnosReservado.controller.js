@@ -8,7 +8,7 @@ export default class TurnosReservadoController{
     crear = async (req, res) => {
         try{
             const turnoReserva = req.body;
-            const nuevoTurnoReserva = await this.turnoReserva.crear(turnoReserva);
+            const nuevoTurnoReserva = await this.turnoReserva.crear(turnoReserva, req.user);
             if (!nuevoTurnoReserva || nuevoTurnoReserva.length === 0){
                 return res.status(400).json({
                     estado: false,
@@ -24,8 +24,8 @@ export default class TurnosReservadoController{
         } catch (error){
             console.log(`Error en POST ${error}`)
 
-            if (error.status === 404) {
-                return res.status(404).json({
+            if (error.status === 404 || error.status === 400) {
+                return res.status(error.status).json({
                     estado: false,
                     mensaje: error.message
                 });
@@ -34,6 +34,34 @@ export default class TurnosReservadoController{
             res.status(500).json({
                 estado:false,
                 mensaje:'Error interno '
+            });
+        }
+    }
+
+    atender = async (req, res) => {
+        try {
+            const id_turno_reserva = parseInt(req.params.id);
+
+            await this.turnoReserva.marcarAtendido(id_turno_reserva, req.user);
+
+            return res.status(200).json({
+                estado: true,
+                mensaje: 'Turno marcado como atendido correctamente.'
+            });
+
+        } catch (error) {
+            console.log(`Error en PUT atender ${error}`)
+
+            if (error.status === 404) {
+                return res.status(404).json({
+                    estado: false,
+                    mensaje: error.message
+                });
+            }
+
+            return res.status(500).json({
+                estado: false,
+                mensaje: 'Error interno'
             });
         }
     }

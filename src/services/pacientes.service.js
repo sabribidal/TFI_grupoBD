@@ -14,6 +14,10 @@ export default class PacientesService {
         return await this.pacientes.buscarPorId(id);
     }
 
+    buscarPorUsuario = async (id_usuario) => {
+        return await this.pacientes.buscarPorUsuario(id_usuario);
+    }
+
     crear = async (datos) => {
         return await this.pacientes.crear(datos);
     }

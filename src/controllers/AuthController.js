@@ -15,7 +15,7 @@ export const login = async (req, res) => {
         }
 
         const [usuarios] = await pool.query(
-            "SELECT * FROM usuarios WHERE email = ?",
+            "SELECT * FROM usuarios WHERE email = ? AND activo = 1",
             [email]
         );
 

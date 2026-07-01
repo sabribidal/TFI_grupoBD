@@ -1,14 +1,13 @@
 import express from "express";
 import { upload } from "../middlewares/multer.js";
 import passport from "../middlewares/passport.js";
-import {
-    login,
-    actualizarFoto
-} from "../controllers/AuthController.js";
+import { validarLogin } from "../validations/auth.validations.js";
+import { validarCampos } from "../middlewares/validarCampos.js";
+import { login, actualizarFoto } from "../controllers/AuthController.js";
 
 const router = express.Router();
 
-router.post("/login", login);
+router.post("/login", validarLogin, validarCampos, login);
 
 export default router;
 

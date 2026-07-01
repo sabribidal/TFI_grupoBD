@@ -19,7 +19,29 @@ export default class TurnosReservadoService{
         }
     }
 
-    crear = async (TurnosReserva) =>{
+    crear = async (TurnosReserva, usuarioAutenticado) => {
+
+        let id_paciente = TurnosReserva.id_paciente;
+
+        if (usuarioAutenticado.rol === 2) {
+
+            const pacientePropio = await this.pacientes.buscarPorUsuario(usuarioAutenticado.id);
+
+            if (!pacientePropio) {
+                const error = new Error('No se encontró el registro de paciente asociado a tu usuario.');
+                error.status = 404;
+                throw error;
+            }
+
+            id_paciente = pacientePropio.id_paciente;
+        }
+
+        if (usuarioAutenticado.rol === 3 && !id_paciente) {
+            const error = new Error('Debe indicar el id_paciente para registrar el turno.');
+            error.status = 400;
+            throw error;
+        }
+
         const medico = await this.medicos.buscarPorId(TurnosReserva.id_medico);
 
         if (!medico) {
@@ -28,10 +50,10 @@ export default class TurnosReservadoService{
             throw error;
         }
 
-        const paciente = await this.pacientes.buscarPorId(TurnosReserva.id_paciente);
+        const paciente = await this.pacientes.buscarPorId(id_paciente);
 
         if (!paciente) {
-            const error = new Error(`No se encontró el paciente con ID ${TurnosReserva.id_paciente}.`);
+            const error = new Error(`No se encontró el paciente con ID ${id_paciente}.`);
             error.status = 404;
             throw error;
         }
@@ -44,10 +66,27 @@ export default class TurnosReservadoService{
             valor = valor - (obra_social.porcentaje_descuento * valor);
         }
 
+        TurnosReserva.id_paciente = id_paciente;
         TurnosReserva.valor_total = valor;
         TurnosReserva.id_obra_social = paciente.id_obra_social;
 
         const id_nuevo = await this.turnoReserva.crear(TurnosReserva);
         return id_nuevo;
+    }
+
+    marcarAtendido = async (id_turno_reserva, usuarioAutenticado) => {
+
+        const filasAfectadas = await this.turnoReserva.marcarAtendido(
+            id_turno_reserva,
+            usuarioAutenticado.id
+        );
+
+        if (filasAfectadas === 0) {
+            const error = new Error('No se encontró el turno, ya fue atendido, o no pertenece a este médico.');
+            error.status = 404;
+            throw error;
+        }
+
+        return true;
     }
 }

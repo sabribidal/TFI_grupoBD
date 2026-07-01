@@ -3,6 +3,7 @@ console.log('Turnos - API REST Grupo Axel - Emili - Sabrina - Santiago - Daniel'
 
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import { pool } from './database/conexion.js';
 import { testConexion } from './database/test_conexion.js';
 import { router as v1EspecialidadesRutas } from './routes/v1/especialidadesRutas.js';
@@ -27,14 +28,27 @@ if (typeof process.loadEnvFile === 'function') process.loadEnvFile();
 
 const app = express();
 
-await testConexion(); // Llamar a la función de prueba de conexión
+await testConexion(); 
+
+const origenesPermitidos = (process.env.CORS_ORIGIN || '')
+    .split(',')
+    .map((o) => o.trim())
+    .filter(Boolean);
+
+app.use(cors({
+    origin: origenesPermitidos.length === 0
+        ? false
+        : (origenesPermitidos.includes('*') ? true : origenesPermitidos),
+}));
+
 app.use(express.json());
+app.use(passport.initialize());
+app.use(morgan("dev"));
 
 app.get('/', (req, res) => {
     res.send({'status': 'ok', 'message': 'Servidor funcionando correctamente'});
 });
 
-app.use(morgan("dev"));
 app.use('/api/v1/especialidades', v1EspecialidadesRutas);
 app.use('/api/v1/obras-sociales', v1ObrasSocialesRutas);
 app.use('/api/v1/medicos', v1MedicosRutas);
@@ -44,7 +58,7 @@ app.use("/auth", authRouter);
 app.use("/uploads", express.static("uploads"));
 app.use('/api/v1/pdf', v1PdfRutas);
 app.use('/api/v1/turnos-reservados', v1TurnosReservaRutas);
-app.use(passport.initialize());
+
 const PUERTO = process.env.PUERTO;
 
 app.listen(PUERTO || 3000, () => {

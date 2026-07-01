@@ -2,13 +2,12 @@ import { pool } from './conexion.js';
 
 export default class Medicos {
 
-    // Devuelve las obras sociales asociadas a un medico
     buscarObrasSocialesPorMedico = async (id_medico) => {
         const sql = `
             SELECT os.id_obra_social, os.nombre, os.descripcion, os.porcentaje_descuento, os.es_particular
             FROM medicos_obras_sociales mos
             JOIN obras_sociales os ON os.id_obra_social = mos.id_obra_social
-            WHERE mos.id_medico = ?
+            WHERE mos.id_medico = ? AND mos.activo = 1 AND os.activo = 1
         `;
         const [rows] = await pool.execute(sql, [id_medico]);
         return rows;
@@ -58,21 +57,22 @@ export default class Medicos {
         return medicos;
     }
 
-    // Reemplaza por completo las relaciones medico-obra_social.
-    // Recibe la conexion de una transaccion ya abierta (no usa el pool directamente).
     _reemplazarObrasSociales = async (conexion, id_medico, obras_sociales) => {
 
         await conexion.execute(
-            'DELETE FROM medicos_obras_sociales WHERE id_medico = ?',
+            'UPDATE medicos_obras_sociales SET activo = 0 WHERE id_medico = ?',
             [id_medico]
         );
 
         if (obras_sociales && obras_sociales.length > 0) {
             const valores = obras_sociales.map((id_obra_social) => [id_medico, id_obra_social]);
 
+            // Reactiva si ya existía la relación, o la crea si es nueva
             await conexion.query(
-                'INSERT INTO medicos_obras_sociales (id_medico, id_obra_social) VALUES ?',
-                [valores]
+                `INSERT INTO medicos_obras_sociales (id_medico, id_obra_social, activo)
+                 VALUES ?
+                 ON DUPLICATE KEY UPDATE activo = 1`,
+                [valores.map(([m, o]) => [m, o, 1])]
             );
         }
     }
