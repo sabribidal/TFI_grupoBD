@@ -10,7 +10,8 @@ const router = express.Router();
 const turnosReservadoController = new TurnosReservadoController();
 const auth = passport.authenticate('jwt', { session: false });
 
-router.get('/', auth, autorizar('1, 2'), turnosReservadoController.buscarTodos);
-router.get('/:id', auth, autorizar('1, 2'), validarTurnoReserva, validarCampos, turnosReservadoController.crear);
+router.get('/', auth, autorizar(1, 2), turnosReservadoController.buscarTodos);
+
+router.post('/', auth, autorizar(2), validarTurnoReserva, validarCampos, turnosReservadoController.crear);
 
 export { router }

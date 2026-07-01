@@ -10,14 +10,14 @@ const controller = new MedicosController();
 const auth = passport.authenticate('jwt', { session: false });
 
 
-router.get('/', auth, autorizar('2, 3'), controller.buscarTodas);
-router.get('/especialidad/:id_especialidad', auth, autorizar('2, 3'), controller.buscarPorEspecialidad);
-router.get('/:id', auth, autorizar('2, 3'), validarIdMedico, validarCampos, controller.buscarPorId);
+router.get('/', auth, autorizar(2, 3), controller.buscarTodas);
+router.get('/especialidad/:id_especialidad', auth, autorizar(2, 3), controller.buscarPorEspecialidad);
+router.get('/:id', auth, autorizar(2, 3), validarIdMedico, validarCampos, controller.buscarPorId);
 
 
-router.post('/', auth, autorizar('3'), validarCrearMedico, validarCampos, controller.crear);
-router.put('/:id', auth, autorizar('3'), validarActualizarMedico, validarCampos, controller.actualizar);
-router.delete('/:id', auth, autorizar('3'), validarIdMedico, validarCampos, controller.eliminar);
+router.post('/', auth, autorizar(3), validarCrearMedico, validarCampos, controller.crear);
+router.put('/:id', auth, autorizar(3), validarActualizarMedico, validarCampos, controller.actualizar);
+router.delete('/:id', auth, autorizar(3), validarIdMedico, validarCampos, controller.eliminar);
 
 
 export { router };

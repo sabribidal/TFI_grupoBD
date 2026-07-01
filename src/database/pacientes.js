@@ -43,18 +43,29 @@ export default class Pacientes {
 
     actualizar = async (id, paciente) => {
 
-        const sql = `
-            UPDATE pacientes
-            SET id_usuario = ?,
-                id_obra_social = ?
-            WHERE id_paciente = ?
-        `;
+        const { id_usuario, id_obra_social } = paciente;
 
-        await pool.execute(sql, [
-            paciente.id_usuario,
-            paciente.id_obra_social,
-            id
-        ]);
+        const campos = [];
+        const valores = [];
+
+        if (id_usuario !== undefined) {
+            campos.push('id_usuario = ?');
+            valores.push(id_usuario);
+        }
+
+        if (id_obra_social !== undefined) {
+            campos.push('id_obra_social = ?');
+            valores.push(id_obra_social);
+        }
+
+        if (campos.length === 0) {
+            return await this.buscarPorId(id);
+        }
+
+        valores.push(id);
+
+        const sql = `UPDATE pacientes SET ${campos.join(', ')} WHERE id_paciente = ?`;
+        await pool.execute(sql, valores);
 
         return await this.buscarPorId(id);
     }

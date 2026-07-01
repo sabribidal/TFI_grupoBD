@@ -11,22 +11,30 @@ const autorizarReporte = (req, res, next) => {
     const { rol, id } = req.user;
     const medicoId = parseInt(req.params.medicoId);
 
-    if (rol === 3) return next();                        // admin: puede ver cualquiera
-    if (rol === 1 && id === medicoId) return next();     // médico: solo el suyo
+    if (rol === 3) return next();                        
+    if (rol === 1 && id === medicoId) return next();     
 
     return res.status(403).json({ mensaje: "Acceso denegado" });
 };
 
-router.get('/medicos', controller.buscarMedicos);
-router.get('/especialidades', controller.buscarEspecialidades);
+router.get('/medicos',
+    passport.authenticate('jwt', { session: false }),
+    autorizar(1, 3),
+    controller.buscarMedicos
+);
+router.get('/especialidades',
+    passport.authenticate('jwt', { session: false }),
+    autorizar(1, 3),
+    controller.buscarEspecialidades
+);
 router.get('/reporte-mensual/:anio/:mes',
     passport.authenticate('jwt', { session: false }),
-    autorizar([3]),  // solo admin puede acceder a este reporte general
+    autorizar(3),  
     controller.generarReporteMensual    
 );
 router.get('/reporte/:medicoId/:fecha', 
     passport.authenticate('jwt', { session: false }),
-    autorizarReporte,   // reemplaza al autorizar genérico
+    autorizarReporte,   
     validarReporte,
     controller.generarReportePDF
 );

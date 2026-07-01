@@ -23,6 +23,14 @@ export default class TurnosReservadoController{
 
         } catch (error){
             console.log(`Error en POST ${error}`)
+
+            if (error.status === 404) {
+                return res.status(404).json({
+                    estado: false,
+                    mensaje: error.message
+                });
+            }
+
             res.status(500).json({
                 estado:false,
                 mensaje:'Error interno '
@@ -32,7 +40,7 @@ export default class TurnosReservadoController{
 
     buscarTodos=async(req, res)=>{
         try{
-            const turnos = await this.turnosReservas.buscarTodas(req.user);
+            const turnos = await this.turnoReserva.buscarTodas(req.user);
             res.status(200).json({
                 estado:true,
                 mensaje:'Turnos obtenidos',

@@ -98,7 +98,8 @@ export default class MedicosController {
                 id_especialidad,
                 matricula,
                 descripcion,
-                valor_consulta
+                valor_consulta,
+                obras_sociales
             } = req.body;
 
             const nuevo = await this.service.crear({
@@ -106,7 +107,8 @@ export default class MedicosController {
                 id_especialidad,
                 matricula,
                 descripcion,
-                valor_consulta
+                valor_consulta,
+                obras_sociales
             });
 
             return res.status(201).json({
@@ -138,7 +140,8 @@ export default class MedicosController {
                 id_especialidad,
                 matricula,
                 descripcion,
-                valor_consulta
+                valor_consulta,
+                obras_sociales
             } = req.body;
 
             const actualizado = await this.service.actualizar(id, {
@@ -146,7 +149,8 @@ export default class MedicosController {
                 id_especialidad,
                 matricula,
                 descripcion,
-                valor_consulta
+                valor_consulta,
+                obras_sociales
             });
 
             return res.status(200).json({

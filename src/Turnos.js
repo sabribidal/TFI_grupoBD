@@ -9,6 +9,7 @@ import { router as v1EspecialidadesRutas } from './routes/v1/especialidadesRutas
 import { router as v1ObrasSocialesRutas } from './routes/v1/obrasSocialesRutas.js';
 import { router as v1MedicosRutas } from './routes/v1/medicosRutas.js';
 import { router as v1PdfRutas } from './routes/v1/pdfRutas.js';
+import { router as v1TurnosReservaRutas } from './routes/v1/turnosReservaRutas.js';
 import v1PacientesRutas from './routes/v1/pacientesRutas.js';
 import { createRequire } from 'module';
 import swaggerUI from 'swagger-ui-express';
@@ -30,7 +31,6 @@ await testConexion(); // Llamar a la función de prueba de conexión
 app.use(express.json());
 
 app.get('/', (req, res) => {
-    //res.status(200).send({'estado': 'ok', 'mensaje': 'Servidor funcionando correctamente'});
     res.send({'status': 'ok', 'message': 'Servidor funcionando correctamente'});
 });
 
@@ -43,6 +43,7 @@ app.use('/api/v1/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 app.use("/auth", authRouter);
 app.use("/uploads", express.static("uploads"));
 app.use('/api/v1/pdf', v1PdfRutas);
+app.use('/api/v1/turnos-reservados', v1TurnosReservaRutas);
 app.use(passport.initialize());
 const PUERTO = process.env.PUERTO;
 
